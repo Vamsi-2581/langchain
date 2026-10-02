@@ -3,9 +3,6 @@ type: "Reference"
 title: "CI/CD Workflows: GitHub Actions and Release Process"
 description: "LangChain's GitHub Actions-based CI/CD system automating testing, linting, and release management across a monorepo with intelligent change detection, parallel matrix testing, and strict release gates."
 tags: [ci-cd, github-actions, testing, linting, release, pypi, monorepo, automation]
-verified:
-  - by: openwiki/0.5.0
-    at: 2026-09-28T08:35:20.640Z
 sources:
   - id: openwiki-source-34e57b5a3a0c875639ab72a7
     resource: repo://.github/scripts/check_diff.py
@@ -31,7 +28,10 @@ sources:
     resource: repo://.github/workflows/pr_labeler.yml
   - id: openwiki-source-12805fbf767dc2a3e238645e
     resource: repo://.github/workflows/pr_lint.yml
-generated: { by: "openwiki/0.5.0", at: "2026-09-28T08:35:20.640Z" }
+generated: { by: "openwiki/0.5.0", at: "2026-10-02T08:28:18.056Z" }
+verified:
+  - by: openwiki/0.5.0
+    at: 2026-10-02T08:28:18.056Z
 ---
 
 # CI/CD Workflows: GitHub Actions and Release Process
@@ -217,23 +217,25 @@ Scheduled daily (1 PM UTC) with manual dispatch override capability.
 
 **Job: `compute-matrix`**:
 
-- **Default scope**: Tests 9 partner libraries (OpenAI, Anthropic, Fireworks, Groq, MistralAI, XAI, Google VertexAI, Google GenAI, AWS)
+- **Default scope**: Tests 9 partner libraries by default (OpenAI, Anthropic, Fireworks, Groq, MistralAI, XAI, Google VertexAI, Google GenAI, AWS)
 - **Python versions**: 3.10 and 3.14 by default; overridable via input
 - **Selective testing**: Can select single library, exclude libraries, or override Python versions
 - **Scope security**: Only runs on main repository; manual dispatch allowed from forks
+- **Matrix logic**: Generates JSON matrix with `python-version` and `working-directory` arrays; outputs both a general matrix (3.10/3.14) and a python-version-min-3-11 variant for packages requiring Python >=3.11
 
 ### Integration Test Execution
 
 **Job: `integration-tests`**:
 
-- Checks out primary monorepo plus external google-genai, google-vertexai, and langchain-aws repositories
-- Reorganizes external repos into local partner directories for unified testing
-- Authenticates to Google Cloud and AWS
-- Runs per-package `make integration_tests` with all live API credentials injected
-- Uses concurrency locks per (package, python-version) to serialize same-package runs and prevent credential conflicts
-- Includes special installation logic: overlays local editable core and standard-tests packages atop checked-out partner versions
+- Checks out primary monorepo (`langchain` path) plus three external repositories separately (langchain-google, langchain-aws)
+- Reorganizes external repos into local partner directories: moves `langchain-google/libs/genai` to `langchain/libs/partners/google-genai`, `langchain-google/libs/vertexai` to `langchain/libs/partners/google-vertexai`, and `langchain-aws/libs/aws` to `langchain/libs/partners/aws`
+- Authenticates to Google Cloud and AWS using secrets
+- Installs dependencies with `uv sync --group test --group test_integration`; for external packages (google-genai, google-vertexai, aws), overlays local editable installs of core, langchain_v1 (conditional), and standard-tests via `uv pip install -e <path>` to test against current branch
+- Runs per-package `make integration_tests` with all live API credentials injected via environment variables
+- Uses concurrency locks per (package, python-version) to serialize same-package runs and prevent credential conflicts: `group: integration-tests-${{ matrix.working-directory }}-${{ matrix.python-version }}`
+- Cleans up external directories before final git status verification (no untracked files expected)
 
-**Credentials**: Receives 30+ environment variables covering OpenAI, Anthropic, Google, AWS, Azure, Groq, MistralAI, HuggingFace, Mistral, Together, Cohere, and more.
+**Credentials**: Receives 40+ environment variables for API authentication covering OpenAI, Anthropic, Google, AWS, Azure, Groq, MistralAI, HuggingFace, Mistral, Together, Cohere, Deepseek, EXA, Elasticsearch, Nomic, NVIDIA, Ollama, Perplexity, Typesafe, Upstage, Watson X, and LangSmith instrumentation (LANGSMITH_TRACING, LANGSMITH_API_KEY, LANGSMITH_GATEWAY, etc.).
 
 ## Auto-Labeling Workflows
 
@@ -359,10 +361,14 @@ Isolated jobs (build, testing) receive no write permissions; publishing jobs run
 ### Custom Actions
 
 **`uv_setup`** (`.github/actions/uv_setup`):
-- Sets up Python via official `setup-python` action
-- Configures `uv` tool with optional caching
-- Supports per-package cache suffixes to avoid cross-contamination
-- Parameters: `python-version`, `cache-suffix`, `working-directory`, `enable-cache`
+- Wrapper around `astral-sh/setup-uv` (v7) that installs Python and the `uv` tool with dependency caching
+- **UV version**: pinned to `0.12.21` via `UV_VERSION` env var in action.yml
+- **Caching strategy**: Optional (default enabled) with per-package cache glob scoping on `pyproject.toml`, `uv.lock`, and `requirements*.txt` files
+- **Parameters**: 
+  - `python-version` (required): Python version in MAJOR.MINOR format (e.g., `3.10`, `3.14`)
+  - `enable-cache` (optional, default `true`): Toggle caching on/off
+  - `cache-suffix` (optional, default empty): Custom cache key suffix for invalidation (e.g., to isolate test/build caches)
+  - `working-directory` (optional, default `**`): Glob pattern for cache dependency paths, scoped per-package when used
 
 ## Important Invariants & Failure Modes
 

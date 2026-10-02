@@ -36,10 +36,10 @@ sources:
     resource: repo://libs/partners/openai/tests/unit_tests/chat_models/test_responses_standard.py
   - id: openwiki-source-025cad4ae99967890152b7e0
     resource: repo://libs/standard-tests/README.md
-generated: { by: "openwiki/0.5.0", at: "2026-09-22T08:27:06.345Z" }
+generated: { by: "openwiki/0.5.0", at: "2026-10-02T08:28:18.056Z" }
 verified:
   - by: openwiki/0.5.0
-    at: 2026-09-28T08:35:20.640Z
+    at: 2026-10-02T08:28:18.056Z
 ---
 
 ## Overview
@@ -108,7 +108,7 @@ requires-python = ">=3.10.0,<4.0.0"
 version = "0.1.0"
 
 dependencies = [
-    "langchain-core>=1.6.2,<2.0.0",           # Required: base LangChain
+    "langchain-core>=1.6.6,<2.0.0",           # Required: base LangChain
     "provider-client-library>=2.45.0,<4.0.0", # Provider's own SDK (pinned version)
     "certifi>=2024.6.2",                      # SSL certificates
 ]
@@ -374,6 +374,41 @@ def _convert_messages_to_provider_format(
     
     return provider_messages
 ```
+
+### Message Block Translators
+
+**Location**: `repo://libs/core/langchain_core/messages/block_translators/`
+
+Message block translators form an extensible architecture for converting between provider-specific content formats and LangChain's unified content block representation. When `content_blocks` is called on an `AIMessage` or `AIMessageChunk` with a `model_provider` set in `response_metadata`, the translator for that provider is used to parse the content into blocks. If no translator is registered or available, a best-effort fallback parsing is used.
+
+**Translator Registry:**
+
+Providers register translators via `register_translator()` (reference: `repo://libs/core/langchain_core/messages/block_translators/__init__.py#L39-L54`):
+
+```python
+from langchain_core.messages.block_translators import register_translator
+
+def _register_my_provider_translator() -> None:
+    """Register translators for provider."""
+    register_translator(
+        provider="my_provider",
+        translate_content=_translate_my_provider_content,
+        translate_content_chunk=_translate_my_provider_content_chunk,
+    )
+
+# Implement these functions to convert provider-specific content to unified blocks
+def _translate_my_provider_content(message: AIMessage) -> list[ContentBlock]:
+    # Parse message.content (provider format) into unified blocks
+    pass
+
+def _translate_my_provider_content_chunk(chunk: AIMessageChunk) -> list[ContentBlock]:
+    # Parse chunk.content (provider format) into unified blocks
+    pass
+```
+
+**Built-in translators** handle OpenAI, Anthropic, Google GenAI, Groq, and Bedrock. New providers should implement similar translators to support features like reasoning blocks, server tool use, and advanced response formats.
+
+**Example: OpenAI translator** (reference: `repo://libs/core/langchain_core/messages/block_translators/openai.py#L1077-L1090`) registers functions to convert OpenAI's response structure (with reasoning content, text blocks, tool calls, etc.) to unified blocks.
 
 ### Converting Provider Response Format to Unified Messages
 

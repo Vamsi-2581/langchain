@@ -5,7 +5,7 @@ description: "Entry point for engineers: orient to the monorepo structure, run f
 tags: [quickstart, getting-started, monorepo, setup, development, first-steps, cli-reference]
 verified:
   - by: openwiki/0.5.0
-    at: 2026-09-29T08:28:34.635Z
+    at: 2026-10-02T08:28:18.056Z
 sources:
   - id: openwiki-source-4d1645cb6317345817452838
     resource: repo://.pre-commit-config.yaml
@@ -25,6 +25,8 @@ sources:
     resource: repo://libs/core/langchain_core/runnables/__init__.py
   - id: openwiki-source-7c4bed110359f4f5c7847c8b
     resource: repo://libs/core/langchain_core/tools/__init__.py
+  - id: openwiki-source-6d8c57e49a37dcb5bb7effa4
+    resource: repo://libs/core/langchain_core/version.py
   - id: openwiki-source-8f1875229ad4a704c8e20a06
     resource: repo://libs/core/Makefile
   - id: openwiki-source-3486a94e6eb23a78271a5bfb
@@ -37,13 +39,25 @@ sources:
     resource: repo://libs/langchain_v1/langchain/agents/middleware/__init__.py
   - id: openwiki-source-b09b1477098d69af6abaa5b4
     resource: repo://libs/langchain_v1/langchain/chat_models/__init__.py
+  - id: openwiki-source-ba4876d385d4d18ed4fa0342
+    resource: repo://libs/langchain_v1/pyproject.toml
   - id: openwiki-source-49fbcc45434b619b68220bf9
     resource: repo://libs/Makefile
+  - id: openwiki-source-f416dbc063b474398e38ff3c
+    resource: repo://libs/partners/anthropic/langchain_anthropic/data/_profiles.py
+  - id: openwiki-source-d14c2b8060843a8a89b74733
+    resource: repo://libs/partners/anthropic/langchain_anthropic/data/profile_augmentations.toml
+  - id: openwiki-source-04e3ac4f56ff2adb2b02de7d
+    resource: repo://libs/partners/anthropic/pyproject.toml
   - id: openwiki-source-1e66a9da38565f8901e651f4
     resource: repo://libs/partners/openai/langchain_openai/__init__.py
+  - id: openwiki-source-74e5bef080f1af7da12371cf
+    resource: repo://libs/partners/openai/langchain_openai/data/_profiles.py
+  - id: openwiki-source-df762860acfcc6abf0ce804b
+    resource: repo://libs/partners/openai/pyproject.toml
   - id: openwiki-source-48ce5ee900993294d349b4e8
     resource: repo://libs/standard-tests/langchain_tests/__init__.py
-generated: { by: "openwiki/0.5.0", at: "2026-09-29T08:28:34.635Z" }
+generated: { by: "openwiki/0.5.0", at: "2026-10-02T08:28:18.056Z" }
 ---
 
 ## Welcome to LangChain Development
@@ -60,9 +74,9 @@ LangChain is organized as a **three-layer architecture** in `/libs/`:
 
 ```
 /libs/
-├── core/              # langchain-core (v1.6.5): Base abstractions (Runnable, BaseChatModel, tools, prompts, messages)
+├── core/              # langchain-core (v1.6.6): Base abstractions (Runnable, BaseChatModel, tools, prompts, messages)
 ├── langchain_v1/      # langchain (v1.4.3): Agent orchestration, factory, middleware
-├── partners/          # Provider-specific integrations (OpenAI, Anthropic, Ollama, etc.)
+├── partners/          # Provider-specific integrations (OpenAI v1.6.7, Anthropic v1.7.5, Ollama, etc.)
 ├── standard-tests/    # Shared test suites for component conformance
 ├── text-splitters/    # Text splitting utilities
 ├── model-profiles/    # LLM metadata and capability profiles
@@ -136,6 +150,36 @@ Pre-commit hooks run:
 - Text normalization and trailing whitespace fixes
 - **Per-package formatting and linting** (ruff, mypy)
 - **Version consistency checks** across `pyproject.toml` files
+
+## Model Profiles and Provider Capabilities
+
+LangChain maintains machine-readable model profiles and provider-specific capability overrides that enable dynamic model discovery and feature detection through `init_chat_model`.
+
+### Profile Organization
+
+- **`_profiles.py`** in each provider (`libs/partners/{provider}/langchain_{provider}/data/`) defines base model metadata: name, release date, input/output limits, supported modalities (text, image, audio, video), and feature flags (tool_calling, structured_output, reasoning_output, etc.)
+
+- **`profile_augmentations.toml`** in providers enables per-model capability overrides. For example, Anthropic models use this file to declare:
+  - Enhanced structured output support for specific models (claude-haiku-4-5, claude-sonnet-4-5, claude-opus variants)
+  - Reasoning effort levels (`["low", "medium", "high", "xhigh", "max"]`) for models supporting extended thinking
+  - Default reasoning effort settings (e.g., `reasoning_effort_default = "high"`)
+
+### Example: Claude Models with Extended Thinking
+
+The Anthropic profile augmentations declare:
+```toml
+[overrides."claude-fable-5"]
+structured_output = true
+reasoning_effort_levels = ["low", "medium", "high", "xhigh", "max"]
+reasoning_effort_default = "high"
+```
+
+This pattern allows `init_chat_model` to:
+1. Discover available capabilities per model
+2. Validate user parameters at runtime
+3. Fail fast if a feature isn't supported (vs. silent failures at API call time)
+
+For adding new provider capabilities, follow the augmentation pattern rather than editing `_profiles.py` directly (which is auto-generated from models.dev).
 
 ## Common Development Tasks
 

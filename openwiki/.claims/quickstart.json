@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:6585fb7a1172592cbaf6a865841096f09424e36447d24d244974094163c16746",
+  "pageVersion": "sha256:7861bd3e23ac674b05e7c5496bed8c485eb47cc2b25b86f888fbd492d566a982",
   "claims": [
     {
       "id": "claim_7425c73f5e4c4667b8babba66c3663a0",
@@ -179,10 +179,60 @@
           "version": "repo-file-v1:sha256:8b94ff472e8acdf4b6145e2e1b37c13b6548624a8857866f694e12740e1c1d8e"
         }
       ]
+    },
+    {
+      "id": "claim_0875917943504d77b9566af28b4e2d3a",
+      "statement": "LangChain packages are versioned as: langchain-core v1.6.6, langchain v1.4.3, langchain-openai v1.6.7, and langchain-anthropic v1.7.5, with dependencies maintained across the three-layer architecture",
+      "evidence": [
+        {
+          "resource": "repo://libs/core/langchain_core/version.py",
+          "version": "repo-file-v1:sha256:0c00b7d56d87949af7e4cd370dd183521a1715851072b788cd01f08d1b8dd7e4"
+        },
+        {
+          "resource": "repo://libs/core/pyproject.toml#L24-L24",
+          "version": "repo-lines-v1:sha256:27b03d6042bb27fdb37d8905c8fd0d90a59ce02a40e773afa5814ca33f709265:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdiMDNkNjA0MmJiMjdmZGIzN2Q4OTA1YzhmZDBkOTBhNTljZTAyYTQwZTc3M2FmYTU4MTRjYTMzZjcwOTI2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdiMDNkNjA0MmJiMjdmZGIzN2Q4OTA1YzhmZDBkOTBhNTljZTAyYTQwZTc3M2FmYTU4MTRjYTMzZjcwOTI2NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmRmYWFiMzNiMmUzYTUwMTM3NmZlODIxNDNkNzBmNmVkYjMyNWI4YWMzYWI5MDUwYTg0OTgwN2ZmM2FhZGI3NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGEyM2RmNzFkODljMGE5NmUzNWFhZjk1ZTdjZTllYTczYTRiN2FlZjQyNDZjN2Q3YzAzZjhlM2EwMTJiZjliNSJ9"
+        },
+        {
+          "resource": "repo://libs/langchain_v1/pyproject.toml#L24-L24",
+          "version": "repo-lines-v1:sha256:5c1540aa3c12c9f63144146f557e429020cd08aac4d43e8a74502660cdcdf9ab:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWMxNTQwYWEzYzEyYzlmNjMxNDQxNDZmNTU3ZTQyOTAyMGNkMDhhYWM0ZDQzZThhNzQ1MDI2NjBjZGNkZjlhYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWMxNTQwYWEzYzEyYzlmNjMxNDQxNDZmNTU3ZTQyOTAyMGNkMDhhYWM0ZDQzZThhNzQ1MDI2NjBjZGNkZjlhYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmRmYWFiMzNiMmUzYTUwMTM3NmZlODIxNDNkNzBmNmVkYjMyNWI4YWMzYWI5MDUwYTg0OTgwN2ZmM2FhZGI3NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjBlZGVkMjY4YzQ3NGU4ZjE3NDI2MmU2YzAwM2UzNzhlNjZmODJjM2I4ZDBiMmU5NGYxOTUxYWIzOGEyMTVhNCJ9"
+        },
+        {
+          "resource": "repo://libs/partners/anthropic/pyproject.toml#L23-L23",
+          "version": "repo-lines-v1:sha256:7a1249711db2284745c8d6d9221eec0e873172d738d8d39563367781a9ada3ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ExMjQ5NzExZGIyMjg0NzQ1YzhkNmQ5MjIxZWVjMGU4NzMxNzJkNzM4ZDhkMzk1NjMzNjc3ODFhOWFkYTNlZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ExMjQ5NzExZGIyMjg0NzQ1YzhkNmQ5MjIxZWVjMGU4NzMxNzJkNzM4ZDhkMzk1NjMzNjc3ODFhOWFkYTNlZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzBlM2JkZDc0YWJkOGViYjVjMDMyNTNkNGZmNTA2ZmNhZmNjYWExZDkyMDVlMWQxZmMzMzUzOGY2MTViMTI1OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjQwYjNkOWY3YjcyODI1NGY1ZDk0MDM0ZDdlOTY2NDE1ZmFiZGVkNDlkMGM2YzI2ZjZjZGM5NGEyMDhiODU2OSJ9"
+        },
+        {
+          "resource": "repo://libs/partners/openai/pyproject.toml#L23-L23",
+          "version": "repo-lines-v1:sha256:ce8e8806998ffcda2f337d1b16da860a7f4fff2cb382c8e8e4ccb9e41a728e2a:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2U4ZTg4MDY5OThmZmNkYTJmMzM3ZDFiMTZkYTg2MGE3ZjRmZmYyY2IzODJjOGU4ZTRjY2I5ZTQxYTcyOGUyYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2U4ZTg4MDY5OThmZmNkYTJmMzM3ZDFiMTZkYTg2MGE3ZjRmZmYyY2IzODJjOGU4ZTRjY2I5ZTQxYTcyOGUyYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzBlM2JkZDc0YWJkOGViYjVjMDMyNTNkNGZmNTA2ZmNhZmNjYWExZDkyMDVlMWQxZmMzMzUzOGY2MTViMTI1OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODZlYjJlYTJhZWU0NmY2MWE1MTFjMmRiNzA3ODkyMzQwNjNhNWJiYmEyMWRkZWI4MzRjZjhhN2JjMDVhNjllNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_80f1a04e61f44f1287079ef2cccb9bec",
+      "statement": "Each provider (OpenAI, Anthropic, etc.) publishes model profiles via _profiles.py files that define base model metadata: name, release date, input/output token limits, supported modalities (text, image, audio, video), and feature flags (tool_calling, structured_output, reasoning_output)",
+      "evidence": [
+        {
+          "resource": "repo://libs/partners/anthropic/langchain_anthropic/data/_profiles.py#L1-L100",
+          "version": "repo-lines-v1:sha256:52f3fdb01521b8c27fabe1ddaa00ceabd2c5afe4726d8c33babf79a78a667cd6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIyYTM3NjkxYWFlMDRmMDRhODFmNjg1OGFlZWFhYTgxMjRiZTMyMTlhOGNiZTgwZWRiMDA4YjQ1ZjUwYWZkZTY5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJkMmQ4YTlkZTdjMWM0NmY4ZjJiN2YzOTA4OWU0Zjg2YzZmZWZmYmRmZmJjYzhjMGUxMzZjMjQyMTQ5MWZkODBjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI1MjhlNDNhN2UwZmY5NDgxYjdkYzg4MmI3YWYxMjA0ODUwMzc4ZWI3ZTI5ZTIzYjYzMmJiMDhiYTU1NjdmNjc3In0"
+        },
+        {
+          "resource": "repo://libs/partners/openai/langchain_openai/data/_profiles.py#L1-L50",
+          "version": "repo-lines-v1:sha256:2e72c0838d1d1ebcc9cac8629a532b86dd4da643c5fef0ae455bf0d75cd03aee:eyJzZWxlY3RlZExpbmVDb3VudCI6NTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJhMzc2OTFhYWUwNGYwNGE4MWY2ODU4YWVlYWFhODEyNGJlMzIxOWE4Y2JlODBlZGIwMDhiNDVmNTBhZmRlNjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4ZjZmMjc4ZmNhMDc5ZDJlNDgwOTFiNzg1YzBiMjRkNzg4NmE0OTc3YmRkN2YyZmE2ZWY5ZTgzOGZiNDVmNzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY5NmI4NTA3Y2QzMmQzYTk5ZWM4ZjUyZWZhYjM5NDFiZjJhMTkwNzNkYzBkOGVmNjAxZmRiZTNkNDE1YWUxZDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_eacf1e7bf0ba4e4189eaab8c34c47592",
+      "statement": "Provider-specific capability overrides are declared in profile_augmentations.toml files using a [overrides] table pattern to customize feature support per model without editing auto-generated _profiles.py; examples include structured_output, reasoning_effort_levels, and reasoning_effort_default settings for Claude models",
+      "evidence": [
+        {
+          "resource": "repo://libs/partners/anthropic/langchain_anthropic/data/profile_augmentations.toml#L1-L75",
+          "version": "repo-lines-v1:sha256:8d2b71495e96a451d096fe6c86c90db34f61814f7e37a54d6419ac80b53e9dbc:eyJzZWxlY3RlZExpbmVDb3VudCI6NzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZDM5YTg2ZGFjNGIzYzEzYjk3MWY4YWE2ZDY5NGE0MWRjMzQxZmI3ZTBjNjEzMjMwYmRjNTVhNzIzNGY2MTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0YTQ0MzhlMGI0NmM2OTA2NzBmMTU1NzMzZDJlMzQwNTJjMDJlMWMxZjQ2Y2ExYWM0Mjg0NDJlMjdlMTJmNjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.5.0",
-    "at": "2026-09-29T08:28:34.635Z"
+    "at": "2026-10-02T08:28:18.056Z"
   }
 }
