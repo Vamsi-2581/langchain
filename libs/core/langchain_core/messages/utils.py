@@ -1825,9 +1825,16 @@ def convert_to_openai_messages(
                             f"{missing}. Full content block:\n\n{block}"
                         )
                         raise ValueError(err)
+                    if not isinstance(message, AIMessage):
+                        err = (
+                            f"Unrecognized content block at "
+                            f"messages[{i}].content[{j}] has 'type': 'tool_use', "
+                            "but tool calls are only supported in AI messages."
+                        )
+                        raise ValueError(err)
                     if not any(
                         tool_call["id"] == block["id"]
-                        for tool_call in cast("AIMessage", message).tool_calls
+                        for tool_call in message.tool_calls
                     ):
                         oai_msg["tool_calls"] = oai_msg.get("tool_calls", [])
                         oai_msg["tool_calls"].append(
@@ -1843,9 +1850,17 @@ def convert_to_openai_messages(
                             }
                         )
                 elif block.get("type") == "function_call":  # OpenAI Responses
+                    if not isinstance(message, AIMessage):
+                        err = (
+                            f"Unrecognized content block at "
+                            f"messages[{i}].content[{j}] has 'type': "
+                            "'function_call', but tool calls are only supported "
+                            "in AI messages."
+                        )
+                        raise ValueError(err)
                     if not any(
                         tool_call["id"] == block.get("call_id")
-                        for tool_call in cast("AIMessage", message).tool_calls
+                        for tool_call in message.tool_calls
                     ):
                         if missing := [
                             k
