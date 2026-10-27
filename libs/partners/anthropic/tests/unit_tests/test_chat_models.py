@@ -3253,7 +3253,7 @@ def test_usage_metadata_cache_creation_ttl() -> None:
     assert details["ephemeral_5m_input_tokens"] == 12
     assert details["ephemeral_1h_input_tokens"] is None
 
-    # Case 5: cache_creation exists but specific keys are zero — falls back to
+    # Case 4: cache_creation exists but specific keys are zero — falls back to
     # generic cache_creation_input_tokens
     class CacheCreationZero(BaseModel):
         ephemeral_5m_input_tokens: int = 0
@@ -3276,7 +3276,7 @@ def test_usage_metadata_cache_creation_ttl() -> None:
     assert details["cache_read"] == 10
     assert details["cache_creation"] == 50
 
-    # Case 4: cache_creation exists but specific keys are missing from the dict
+    # Case 5: cache_creation exists but specific keys are missing from the dict
     class CacheCreationEmpty(BaseModel):
         pass
 
