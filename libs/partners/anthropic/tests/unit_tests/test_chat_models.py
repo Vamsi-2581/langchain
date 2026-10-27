@@ -3179,7 +3179,7 @@ def test_usage_metadata_reasoning_tokens() -> None:
     assert result["output_tokens"] == 50
     assert "output_token_details" not in result
 
-    # Case 3: output_tokens_details field absent (older models)
+    # Case 4: output_tokens_details field absent (older models)
     class UsageNoDetails(BaseModel):
         input_tokens: int = 100
         output_tokens: int = 50
@@ -3233,7 +3233,27 @@ def test_usage_metadata_cache_creation_ttl() -> None:
     assert details["ephemeral_5m_input_tokens"] == 80
     assert details["ephemeral_1h_input_tokens"] == 70
 
-    # Case 3: cache_creation exists but specific keys are zero — falls back to
+    # Case 3: cache_creation contains an explicit None for an unsupported TTL
+    class UsageWithNullCacheCreation(BaseModel):
+        input_tokens: int = 200
+        output_tokens: int = 30
+        cache_read_input_tokens: int = 10
+        cache_creation_input_tokens: int = 150
+        cache_creation: dict = {
+            "ephemeral_5m_input_tokens": 12,
+            "ephemeral_1h_input_tokens": None,
+        }
+
+    result = _create_usage_metadata(UsageWithNullCacheCreation())
+    assert result["input_tokens"] == 200 + 10 + 12
+    assert result["output_tokens"] == 30
+    assert result["total_tokens"] == 252
+    details = dict(result.get("input_token_details") or {})
+    assert details["cache_creation"] == 0
+    assert details["ephemeral_5m_input_tokens"] == 12
+    assert details["ephemeral_1h_input_tokens"] is None
+
+    # Case 5: cache_creation exists but specific keys are zero — falls back to
     # generic cache_creation_input_tokens
     class CacheCreationZero(BaseModel):
         ephemeral_5m_input_tokens: int = 0
@@ -3275,7 +3295,7 @@ def test_usage_metadata_cache_creation_ttl() -> None:
     details = dict(result.get("input_token_details") or {})
     assert details["cache_creation"] == 15
 
-    # Case 5: only one ephemeral key is non-zero
+    # Case 6: only one ephemeral key is non-zero
     class CacheCreationPartial(BaseModel):
         ephemeral_5m_input_tokens: int = 0
         ephemeral_1h_input_tokens: int = 75
@@ -3298,7 +3318,7 @@ def test_usage_metadata_cache_creation_ttl() -> None:
     # ephemeral_5m_input_tokens is 0 — still included since 0 is not None
     assert details["ephemeral_5m_input_tokens"] == 0
 
-    # Case 6: no cache_creation field at all (the pre-existing path)
+    # Case 7: no cache_creation field at all (the pre-existing path)
     class UsageNoCacheCreation(BaseModel):
         input_tokens: int = 50
         output_tokens: int = 25
